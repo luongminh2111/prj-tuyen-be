@@ -19,7 +19,7 @@ class CreateMilestonesTable extends Migration
             $table->text('description');
             $table->unsignedBigInteger('project_id');
             $table->date('start_date');
-            $table->date('end_date');
+            $table->date('due_date');
             $table->timestamps();
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
         });

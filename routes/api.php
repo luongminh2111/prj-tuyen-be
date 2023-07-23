@@ -39,6 +39,9 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('/workspace/{id}', [WorkspaceController::class, 'show']);
     Route::get('/get_projects_by_workspace/{id}', [WorkspaceController::class, 'getProjectsByWorkspace']);
     Route::post('/workspace/{id}', [WorkspaceController::class, 'edit']);
+    Route::get('/get_members_by_workspace/{id}', [WorkspaceController::class, 'getMembersByWorkspace']);
+    Route::post('/register', [AuthController::class, 'register']);
+
     //project
     Route::post('/project', [ProjectController::class, 'create']);
     Route::post('/add_member_to_project', [ProjectController::class, 'addMemberToProject']);
@@ -46,7 +49,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('/project/{id}', [ProjectController::class, 'show']);
     Route::post('/project/{id}', [ProjectController::class, 'update']);
     Route::get('/members_of_project/{id}', [ProjectController::class, 'getAllMembersOfProject']);
-    //milesdtone 
+    //milesdtone
     Route::post('/milestone', [MilestoneController::class, 'store']);
     Route::get('/milestone/{id}', [MilestoneController::class, 'show']);
     Route::get('/project/{id}/milestones', [MilestoneController::class, 'getMilestoneByProject']);
@@ -59,7 +62,6 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
 });
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
 Route::post('/email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail'])->middleware('auth:sanctum');
 Route::get('/verify-email/{id}/{token}', [EmailVerificationController::class, 'verify'])->name('verification.verify');
 Route::get('/delete', [UserController::class,'deleteImg']);

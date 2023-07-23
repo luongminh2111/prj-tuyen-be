@@ -10,13 +10,13 @@ class Workspace extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',          
+        'name',
         'organization_name',
-        'domain',       
-        'secret_code',  
-        'secret_key',  
-        'description',  
-        'workspace_admin_id'   
+        'domain',
+        'secret_code',
+        'secret_key',
+        'description',
+        'workspace_admin_id'
     ];
 
     protected $hidden = ['secret_code', 'secret_key', 'workspace_admin_id'];
@@ -25,7 +25,7 @@ class Workspace extends Model
         return $this->hasMany(Project::class);
     }
 
-    public function users(){
+    public function members(){
         return $this->hasMany(User::class);
     }
 

@@ -37,14 +37,14 @@ class MilestoneController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {  
+    {
         //ai có quyền tạo
         $validator = Validator::make($request->all(), [
             'title'                =>  'required|string|unique:milestones,title,except,id',
-            'description'          =>  'required',   
-            'start_date'           =>  'required|date_format:Y-m-d', 
-            'due_date'             =>  'required|date_format:Y-m-d',
-            'project_id'           =>  'required',  
+            'description'          =>  'required',
+            'start_date'           =>  'required',
+            'due_date'             =>  'required',
+            'project_id'           =>  'required',
         ]);
 
         if($validator->fails()){
@@ -59,7 +59,7 @@ class MilestoneController extends Controller
                 'project_id'        => $request->project_id,
                 'created_by'        => $request->user()->id,
             ]);
-            
+
             return response()->json(['status'=>'true', 'message'=>'Milestone Created!', 'data'=>$milestone]);
         }
     }
@@ -88,7 +88,7 @@ class MilestoneController extends Controller
         } catch (\Exception $e){
             return response()->json(['status'=>'false', 'message'=>'Get milestones failed!', 'data'=>[]], 500);
         }
-        
+
 
     }
 
@@ -115,8 +115,8 @@ class MilestoneController extends Controller
         try{
             $validator = Validator::make($request->all(), [
                 'title'                =>  'required|string',
-                'description'         =>   'required',  
-                'start_date'          =>  'required|date_format:Y-m-d', 
+                'description'         =>   'required',
+                'start_date'          =>  'required|date_format:Y-m-d',
                 'due_date'            =>  'nullable|date_format:Y-m-d'
             ]);
             if($validator->fails()){

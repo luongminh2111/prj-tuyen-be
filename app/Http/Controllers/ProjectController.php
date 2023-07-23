@@ -32,7 +32,7 @@ class ProjectController extends Controller
             $validator = Validator::make($request->all(), [
                 'name'                =>  'required|string|unique:projects,name,except,id',
                 'project_key'         =>  'required',
-                'description'         =>  'required',   
+                'description'         =>  'required',
             ]);
 
             if($validator->fails()){
@@ -45,9 +45,10 @@ class ProjectController extends Controller
                         'project_key'     =>  $request->project_key,
                         'description'     =>  $request->description,
                         'start_date'      =>  $request->start_date ? $request->start_date : Carbon::now()->format('Y-m-d H:i:s'),
+                        'due_date'      =>  $request->due_date ? $request->due_date : Carbon::now()->format('Y-m-d H:i:s'),
                         'workspace_id'    =>  $request->user()->workspace_id
                     ]);
-                    
+
                     return response()->json(['status'=>'true', 'message'=>'Project Created!', 'data'=>$project]);
                 } else
                     return response()->json(['status'=>'false', 'message'=>'Forbidden!', 'data'=>[]], 403);
@@ -63,7 +64,7 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //kiem tra xem 
+        //kiem tra xem
     }
 
     /**
@@ -101,14 +102,14 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //Check quyền: Workspace_admin hoặc PM và phải thuộc Project đó. 
-        if(1){ 
+        //Check quyền: Workspace_admin hoặc PM và phải thuộc Project đó.
+        if(1){
 
             $validator = Validator::make($request->all(), [
                 'name'                =>  'required|string',
-                'description'         =>   'required',  
-                'start_date'          =>  'required|date_format:Y-m-d', 
-                'due_date'            =>  'nullable|date_format:Y-m-d'
+                'description'         =>   'required',
+                'start_date'          =>  'required',
+                'due_date'            =>  'nullable'
             ]);
 
             if($validator->fails()){
@@ -133,14 +134,14 @@ class ProjectController extends Controller
                     // $workspace->makeHidden(['secret_code', 'secret_key', 'workspace_admin_id']);
                     return response()->json(['status'=>'true', 'message'=>'Project Updated!', 'data'=>$project]);
                 }
-                if($request->user()->role !== UserRole::WORKSPACE_ADMIN || $request->user()->workspace_id = $workspace->id) 
+                if($request->user()->role !== UserRole::WORKSPACE_ADMIN || $request->user()->workspace_id = $workspace->id)
                     return response()->json(['status'=>'false', 'message'=>'Forbidden!', 'data'=>[]], 403);
-                if(is_null($workspace)) 
+                if(is_null($workspace))
                     return response()->json(['status'=>'false', 'message'=>'Workspace not found!', 'data'=>[]], 404);
 
             }
 
-            
+
             return response()->json(['status'=>'true', 'message'=>'Workspace Edited!', 'data'=>$workspace]);
         } else return response()->json(['status'=>'false', 'message'=>'Forbidden!', 'data'=>[]], 403);
     }
@@ -159,9 +160,9 @@ class ProjectController extends Controller
     public function addMemberToProject(Request $request){
 
         try{
-    
+
             $user = User::find($request->input('user_id'));
-            
+
             $project = Project::find($request->input('project_id'));
             // //nếu 1 trong 2 biến trên không tồn tại => 404
             // // Attach the member to the project using the "attach" method on the pivot relationship
@@ -172,7 +173,7 @@ class ProjectController extends Controller
         } catch (\Exception $e){
             return response()->json(['status'=>'false', 'message'=>'Can not add member to project!', 'data'=>[]], 500);
         }
-        
+
     }
 
     public function addListMembersToProject(Request $request){
@@ -190,11 +191,11 @@ class ProjectController extends Controller
                     $project->users()->attach($user);
                 }
             }
-            
+
             // return $collection;
             // return $project->users;
             return response()->json(['status'=>'true', 'message'=>'List of Members added!', 'data'=>$project->users]);
-            
+
             // //nếu 1 trong 2 biến trên không tồn tại => 404
             // // Attach the member to the project using the "attach" method on the pivot relationship
             // $project->users()->attach($user);
@@ -203,7 +204,7 @@ class ProjectController extends Controller
         } catch (\Exception $e){
             return response()->json(['status'=>'false', 'message'=>'Can not add member to project!', 'data'=>[]], 500);
         }
-        
+
     }
 
     public function getAllMembersOfProject($id){

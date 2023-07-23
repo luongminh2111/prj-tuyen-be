@@ -31,7 +31,7 @@ class WorkspaceController extends Controller
             'name'          =>      'required|string|unique:workspaces,name,except,id',
             'organization'  =>      'required|string',
             'domain'        =>      'required|string',
-            'secret_code'   =>      'required|string' 
+            'secret_code'   =>      'required|string'
         ]);
 
         $key = $data['domain'] . $data['secret_code'];
@@ -45,7 +45,7 @@ class WorkspaceController extends Controller
             'secret_code'   =>          $data['secret_code'],
             'secret_key'    =>          $secret_key,
             'description'   =>          $request->description,
-            'workspace_admin_id'    =>  $request->user()->id   
+            'workspace_admin_id'    =>  $request->user()->id
         ]);
 
         // $workspace->makeHidden(['secret_code', 'secret_key', 'workspace_admin_id']);
@@ -65,7 +65,7 @@ class WorkspaceController extends Controller
      */
     public function store(Request $request)
     {
-        
+
     }
 
     /**
@@ -99,7 +99,7 @@ class WorkspaceController extends Controller
                 'name'                =>  'required|string|unique:workspaces,name,except,id',
                 'organization_name'   =>  'required',
                 'domain'              =>  'required|string',
-                'description'         =>   'required',   
+                'description'         =>   'required',
             ]);
 
             if($validator->fails()){
@@ -124,14 +124,14 @@ class WorkspaceController extends Controller
                     // $workspace->makeHidden(['secret_code', 'secret_key', 'workspace_admin_id']);
                     return response()->json(['status'=>'true', 'message'=>'Workspace Updated!', 'data'=>$workspace]);
                 }
-                if($request->user()->role !== UserRole::WORKSPACE_ADMIN || $request->user()->workspace_id = $workspace->id) 
+                if($request->user()->role !== UserRole::WORKSPACE_ADMIN || $request->user()->workspace_id = $workspace->id)
                     return response()->json(['status'=>'false', 'message'=>'Forbidden!', 'data'=>[]], 403);
-                if(is_null($workspace)) 
+                if(is_null($workspace))
                     return response()->json(['status'=>'false', 'message'=>'Workspace not found!', 'data'=>[]], 404);
 
             }
 
-            
+
             return response()->json(['status'=>'true', 'message'=>'Workspace Edited!', 'data'=>$workspace]);
         } else return response()->json(['status'=>'false', 'message'=>'Forbidden!', 'data'=>[]], 403);
     }
@@ -140,14 +140,25 @@ class WorkspaceController extends Controller
     {
         if($request->user()->workspace_id == $id){
             $workspace = Workspace::findOrFail($id);
-            if($workspace && $workspace->projects) 
+            if($workspace && $workspace->projects)
                 return response()->json(['status'=>'true', 'message'=>'Projects of Workspace', 'data'=>$workspace->projects]);
                 return response()->json(['status'=>'true', 'message'=>'Projects of Workspace', 'data'=>[]]);
-        } else 
+        } else
             return response()->json(['status'=>'false', 'message'=>'Forbidden!', 'data'=>[]], 403);
     }
 
+    public function getMembersByWorkspace(Request $request, $id)
+    {
 
+        if($request->user()->workspace_id == $id){
+            $workspace = Workspace::findOrFail($id);
+            // return  $workspace;
+            if($workspace && $workspace->members)
+                return response()->json(['status'=>'true', 'message'=>'Members of Workspace', 'data'=>$workspace->members]);
+            return response()->json(['status'=>'true', 'message'=>'Members of Workspace', 'data'=>[]]);
+        } else
+            return response()->json(['status'=>'false', 'message'=>'Forbidden!', 'data'=>[]], 403);
+    }
     /**
      * Update the specified resource in storage.
      *

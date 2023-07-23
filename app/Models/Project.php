@@ -11,11 +11,12 @@ class Project extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',          
+        'name',
         'project_key',
-        'description',       
-        'start_date',  
-        'workspace_id',  
+        'description',
+        'start_date',
+        'due_date',
+        'workspace_id',
     ];
 
     public function users()
